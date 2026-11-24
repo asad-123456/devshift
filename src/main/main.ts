@@ -111,11 +111,13 @@ function registerIpc(controller: Engine, resetScanTimer: () => void) {
     return controller.approve(id, approved)
   })
   on(channels.preferences, input => {
-    const { gamingPlan, gamingPowerMode, scanInterval, minimizeToTray } = payload(input)
+    const { gamingPlan, gamingPowerMode, scanInterval, minimizeToTray, startAtLogin } = payload(input)
     if ((gamingPlan !== null && !uuid(gamingPlan)) || (gamingPowerMode !== null && !powerModeChoice(gamingPowerMode))
       || typeof scanInterval !== 'number' || ![5_000, 10_000, 30_000, 60_000].includes(scanInterval)
-      || typeof minimizeToTray !== 'boolean') throw invalid()
-    return controller.preferences({ gamingPlan, gamingPowerMode, scanInterval, minimizeToTray } satisfies Settings).then(resetScanTimer)
+      || typeof minimizeToTray !== 'boolean'
+      || typeof startAtLogin !== 'boolean') throw invalid()
+    try { app.setLoginItemSettings({ openAtLogin: startAtLogin, args: ['--hidden'] }) } catch {}
+    return controller.preferences({ gamingPlan, gamingPowerMode, scanInterval, minimizeToTray, startAtLogin } satisfies Settings).then(resetScanTimer)
   })
   on(channels.pickFile, async kind => {
     if (!window || (kind !== 'executable' && kind !== 'entry')) throw invalid()
@@ -226,7 +228,8 @@ async function start() {
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   window.webContents.on('will-navigate', event => event.preventDefault())
   window.webContents.on('will-attach-webview', event => event.preventDefault())
-  window.once('ready-to-show', showWindow)
+  const startHidden = process.argv.includes('--hidden')
+  if (!startHidden) window.once('ready-to-show', showWindow)
   window.on('close', event => {
     if (!quitting && (local.settings.minimizeToTray || controller.state().busy)) {
       event.preventDefault()

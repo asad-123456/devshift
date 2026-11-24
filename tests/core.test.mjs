@@ -170,6 +170,8 @@ test('orders managed dependents first and leaves unmanaged active dependents and
 
 test('previews before writing, stops only approved workloads, persists a private snapshot and restores in order', async context => {
   const { store, open, path, engine, host, calls, runtime, services } = setup(context)
+  assert.equal(defaultSettings.startAtLogin, false)
+  assert.equal(store.settings.startAtLogin, false)
   await engine.approve('service:postgresql-x64-18', true)
   await engine.approve('service:mysql', true)
   const review = await engine.review('gaming')
