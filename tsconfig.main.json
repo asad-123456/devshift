@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "NodeNext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true
+  },
+  "include": ["src/core/**/*.ts", "src/main/**/*.ts", "src/main/**/*.cts", "src/shared/**/*.ts"]
+}

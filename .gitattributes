@@ -1,0 +1,7 @@
+# Store text with LF line endings and check it out unchanged on every platform.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.exe binary
+*.dll binary

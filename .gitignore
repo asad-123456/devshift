@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+**/bin/
+**/obj/
+*.tsbuildinfo
+
+# Test output: screenshots, fixture binaries, and reports written by the Windows tests
+artifacts/
+
+# Local DevShift databases
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Logs and local environment
+*.log
+.env
+.env.*
+
+# Editors, tools, and OS files
+.vs/
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

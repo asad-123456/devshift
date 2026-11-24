@@ -1,0 +1,69 @@
+name: Bug report
+description: Something in DevShift didn't work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Leave out secrets, tokens, and full command lines. To report a security problem, use **Report a vulnerability** on the Security tab instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Approve the PostgreSQL service in Workloads
+        2. Switch to Gaming
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Switching or recovery
+        - Workload discovery
+        - Windows services
+        - Node projects
+        - Power plans
+        - Dashboard or other UI
+        - Build or packaging
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: DevShift version or commit
+      placeholder: v0.1.0, or a commit hash
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and build
+      description: Run `winver` to find it.
+      placeholder: Windows 11 Home 24H2, build 26100
+    validations:
+      required: true
+  - type: dropdown
+    id: elevation
+    attributes:
+      label: Was DevShift running as administrator?
+      options:
+        - "No"
+        - "Yes"
+        - Not sure
+  - type: textarea
+    id: activity
+    attributes:
+      label: Activity entries or error messages
+      description: Copy the relevant entries from the Activity view.
+      render: text

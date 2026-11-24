@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'">
+    <title>DevShift</title>
+  </head>
+  <body>
+    <div id="startup-splash" role="status" aria-label="Opening DevShift">
+      <div class="splash-lockup" aria-hidden="true">
+        <img src="./assets/devshift.png" alt="" width="80" height="80" fetchpriority="high">
+        <span class="splash-wordmark">DevShift</span>
+        <span class="splash-track"><i></i></span>
+      </div>
+    </div>
+    <div id="root" inert></div>
+    <script type="module" src="/src/renderer/main.tsx"></script>
+  </body>
+</html>

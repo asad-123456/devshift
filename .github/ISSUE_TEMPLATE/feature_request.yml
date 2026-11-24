@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest a workload DevShift should handle, or another improvement.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      placeholder: Docker Desktop keeps 6 GB of memory while I play.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should DevShift do?
+      description: Include how DevShift should restore things when you switch back to Development.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What do you do today instead?

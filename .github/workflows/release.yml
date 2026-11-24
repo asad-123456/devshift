@@ -1,0 +1,47 @@
+name: Release
+
+# Push a tag such as v0.2.0 to build the portable Windows package and attach it to a draft release.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Package for Windows
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build portable package
+        run: npm run package:windows
+
+      - name: Create draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          $archive = "DevShift-$env:TAG-win-x64.zip"
+          Compress-Archive -Path out/DevShift-win32-x64/* -DestinationPath $archive
+          gh release create $env:TAG $archive --repo $env:GITHUB_REPOSITORY --draft --generate-notes --title "DevShift $env:TAG"
