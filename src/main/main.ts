@@ -85,6 +85,14 @@ function payload(value: unknown): Record<string, unknown> {
   return value as Record<string, unknown>
 }
 
+function applyLoginItem(enabled: boolean) {
+  // From source, Windows has to start electron.exe with the app folder.
+  const item = app.isPackaged ? { args: ['--hidden'] } : { path: process.execPath, args: [app.getAppPath(), '--hidden'] }
+  app.setLoginItemSettings({ ...item, openAtLogin: enabled })
+  if (app.getLoginItemSettings(item).openAtLogin !== enabled)
+    throw new UserError('Windows could not update the startup setting.')
+}
+
 function registerIpc(controller: Engine, resetScanTimer: () => void) {
   const choices = new Map<string, { path: string; kind: 'executable' | 'entry'; expires: number }>()
   const on = (channel: string, handler: (...args: unknown[]) => unknown) => {
@@ -116,8 +124,9 @@ function registerIpc(controller: Engine, resetScanTimer: () => void) {
       || typeof scanInterval !== 'number' || ![5_000, 10_000, 30_000, 60_000].includes(scanInterval)
       || typeof minimizeToTray !== 'boolean'
       || typeof startAtLogin !== 'boolean') throw invalid()
-    try { app.setLoginItemSettings({ openAtLogin: startAtLogin, args: ['--hidden'] }) } catch {}
-    return controller.preferences({ gamingPlan, gamingPowerMode, scanInterval, minimizeToTray, startAtLogin } satisfies Settings).then(resetScanTimer)
+    return controller.preferences({ gamingPlan, gamingPowerMode, scanInterval, minimizeToTray, startAtLogin } satisfies Settings)
+      .then(() => applyLoginItem(startAtLogin))
+      .then(resetScanTimer)
   })
   on(channels.pickFile, async kind => {
     if (!window || (kind !== 'executable' && kind !== 'entry')) throw invalid()
@@ -230,6 +239,9 @@ async function start() {
   window.webContents.on('will-attach-webview', event => event.preventDefault())
   const startHidden = process.argv.includes('--hidden')
   if (!startHidden) window.once('ready-to-show', showWindow)
+  if (local.settings.startAtLogin) {
+    try { applyLoginItem(true) } catch {} // A stale startup entry shouldn't stop DevShift from starting.
+  }
   window.on('close', event => {
     if (!quitting && (local.settings.minimizeToTray || controller.state().busy)) {
       event.preventDefault()

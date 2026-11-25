@@ -170,8 +170,6 @@ test('orders managed dependents first and leaves unmanaged active dependents and
 
 test('previews before writing, stops only approved workloads, persists a private snapshot and restores in order', async context => {
   const { store, open, path, engine, host, calls, runtime, services } = setup(context)
-  assert.equal(defaultSettings.startAtLogin, false)
-  assert.equal(store.settings.startAtLogin, false)
   await engine.approve('service:postgresql-x64-18', true)
   await engine.approve('service:mysql', true)
   const review = await engine.review('gaming')
@@ -268,4 +266,11 @@ test('serializes transitions and preserves external changes when closing recover
   assert.equal(runtime.power, gaming)
   assert.equal(store.active(), null)
   assert.equal(calls.length, before)
+})
+
+test('saves the start at login setting', context => {
+  const { store } = setup(context)
+  assert.equal(store.settings.startAtLogin, false)
+  store.settings = { ...store.settings, startAtLogin: true }
+  assert.equal(store.settings.startAtLogin, true)
 })
