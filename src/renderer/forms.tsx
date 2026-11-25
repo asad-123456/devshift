@@ -8,7 +8,7 @@ export function Preferences({ data, busy, error, close, save }: {
   data: Dashboard; busy: boolean; error: string | null; close: () => void; save: (settings: Settings) => void
 }) {
   const [settings, setSettings] = useState(data.settings)
-  return <Dialog title="Preferences" onClose={close} busy={busy}>
+  return <Dialog title="Settings" onClose={close} busy={busy}>
     <ErrorBanner error={error} />
     <form onSubmit={event => { event.preventDefault(); save(settings) }} className="form">
       <label>Gaming power plan
@@ -36,7 +36,7 @@ export function Preferences({ data, busy, error, close, save }: {
       <label className="inline-field"><input type="checkbox" checked={settings.startAtLogin}
         onChange={event => setSettings({ ...settings, startAtLogin: event.target.checked })} />Start DevShift when Windows starts</label>
       <div className="dialog-footer"><button type="button" className="button" onClick={close} disabled={busy}>Cancel</button>
-        <button className="button primary" disabled={busy}>Save preferences</button></div>
+        <button className="button primary" disabled={busy}>Save settings</button></div>
     </form>
   </Dialog>
 }
